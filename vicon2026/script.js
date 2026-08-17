@@ -389,3 +389,4 @@ contactForm.addEventListener('submit', event => {
       button.disabled = false;
     });
 });
+})();
