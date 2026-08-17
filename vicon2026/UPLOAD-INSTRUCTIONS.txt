@@ -1,0 +1,7 @@
+VICON LOGO UPDATE
+
+1. Extract this ZIP.
+2. In GitHub, open the vicon2026 folder and upload index.html and styles.css, replacing the existing files.
+3. Open vicon2026/public/images and upload vicon-logo.png.
+4. Commit all changes.
+5. Render: Manual Deploy > Deploy latest commit.
