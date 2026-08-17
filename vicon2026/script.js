@@ -359,7 +359,8 @@
     const button = $('.send-button', contactForm);
     button.querySelector('span').textContent = 'Ready to send';
     setTimeout(() => {
-      window.location.href = `mailto:hello@vicon.studio?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = `mailto:viconstudios@gmail.com
+?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     }, 450);
   });
 })();
