@@ -366,7 +366,7 @@ contactForm.addEventListener('submit', event => {
       name: data.get('name'),
       email: data.get('email'),
       company: data.get('company') || '—',
-      budget: data.get('budget'),
+  
       message: data.get('message'),
       _subject: `New VICON project — ${data.get('company') || data.get('name')}`,
       _template: 'table'
