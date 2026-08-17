@@ -339,27 +339,53 @@
     }
   });
 
-  // Functional handoff to the visitor's mail client
-  const contactForm = $('#contactForm');
-  const formStatus = $('#formStatus');
-  contactForm.addEventListener('submit', event => {
-    event.preventDefault();
-    if (!contactForm.reportValidity()) return;
-    const data = new FormData(contactForm);
-    const subject = `New VICON project — ${data.get('company') || data.get('name')}`;
-    const body = [
-      `Name: ${data.get('name')}`,
-      `Email: ${data.get('email')}`,
-      `Company: ${data.get('company') || '—'}`,
-      `Budget: ${data.get('budget')}`,
-      '',
-      data.get('message')
-    ].join('\n');
-    formStatus.textContent = 'Brief captured — opening your email client…';
-    const button = $('.send-button', contactForm);
-    button.querySelector('span').textContent = 'Ready to send';
-    setTimeout(() => {
-window.location.href = `mailto:viconstudios@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    }, 450);
-  });
-})();
+  /// Send contact submissions through FormSubmit
+const contactForm = $('#contactForm');
+const formStatus = $('#formStatus');
+
+contactForm.addEventListener('submit', event => {
+  event.preventDefault();
+
+  if (!contactForm.reportValidity()) return;
+
+  const data = new FormData(contactForm);
+  const button = $('.send-button', contactForm);
+  const buttonText = button.querySelector('span');
+
+  formStatus.textContent = 'Sending your message…';
+  buttonText.textContent = 'Sending';
+  button.disabled = true;
+
+  fetch('https://formsubmit.co/ajax/viconstudios@gmail.com', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify({
+      name: data.get('name'),
+      email: data.get('email'),
+      company: data.get('company') || '—',
+      budget: data.get('budget'),
+      message: data.get('message'),
+      _subject: `New VICON project — ${data.get('company') || data.get('name')}`,
+      _template: 'table'
+    })
+  })
+    .then(response => {
+      if (!response.ok) throw new Error('Submission failed');
+      return response.json();
+    })
+    .then(() => {
+      formStatus.textContent = 'Message sent successfully. We’ll be in touch!';
+      buttonText.textContent = 'Message sent';
+      contactForm.reset();
+    })
+    .catch(() => {
+      formStatus.textContent = 'Unable to send. Please try again.';
+      buttonText.textContent = 'Try again';
+    })
+    .finally(() => {
+      button.disabled = false;
+    });
+});
